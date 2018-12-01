@@ -1,0 +1,230 @@
+- name: Create a new Demo EC2 instance
+  hosts: localhost
+  gather_facts: False
+
+  vars:
+      region: ap-south-1
+      instance_type: t2.micro
+      ami: ami-5b673c34 # Redhat
+      keypair: Final_key # pem file name
+
+  tasks:
+
+    - name: Create an ec2 instance
+      ec2:
+         key_name: "{{ keypair }}"
+         aws_access_key: "AKIAIWQLPD76XMNMLUMA"
+         aws_secret_key: "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"
+         group: sg1 # security group name
+         instance_type: "{{ instance_type}}"
+         image: "{{ ami }}"
+         wait: true
+         region: "{{ region }}"
+         count: 1  # default
+         count_tag:
+            Name: "Demo"
+         instance_tags:
+            Name: "Demo"
+         vpc_subnet_id: "subnet-c75dec8b"
+         assign_public_ip: yes
+      register: ec2
+#boto required
+    - debug:
+         msg: "{{ ec2.instances }}"
+
+-----------------------------
+git clone https://github.com/maheshkharwadkar/devops.git
+
+#steps to remove boto error
+sudo yum install wget
+wget https://bootstrap.pypa.io/get-pip.py
+sudo yum install gcc libffi-devel python-devel openssl-devel
+    sudo python get-pip.py
+sudo pip install boto
+
+/usr/lib/jvm/
+
+- name: Create an ec2 instance
+  ec2:
+    key_name: "{{ keypair }}"
+
+pip install boto3 --upgrade
+
+ls -lrt /usr/lib/jvm
+java-1.7.0-openjdk-1.7.0.201-2.6.16.1.el7_6.x86_64/jre
+vi /etc/systemd/system/tomcat.service
+change in number : 8 in above file. 
+ps -ef | grep tomcat 
+netstat -tulpn | grep javaE
+ systemctl daemon-reload
+ systemctl start tomcat
+ systemctl status tomcat
+ ----------------------------------------------------------------------
+ vi roles/tomcat/templates/tomcat.service.j2 : change line number 8 
+ 
+ 
+ 
+ ---------------Ansible Modules-------------------------------------
+---
+- hosts: all
+
+  tasks:
+    - name: Check if process running
+      action: chkprocess process=httpd
+      register: process
+      become: true
+
+    - debug: msg="{{ process.msg }}"
+ 
+ ----------------------------------------------- 
+ ------------------chkprocess.sh-----------------------------
+ 
+#!/bin/bash
+
+# This module checks if the pid of the specifiedi
+# process exists. If not, it returns a failure msg
+
+source $1
+
+pid=`pidof $process`
+if [[ -n $pid ]]; then
+    printf '{
+        "msg" : "%s is running with pid %s",
+        "changed" : 1
+    }' "$process" "$pid"
+else
+    printf '{
+        "msg" : "%s process not running",
+        "failed" : "True"
+    }' "$process"
+fi
+
+ 
+ 
+ 
+
+ 1. Create a new file called 'ansible.repo' in /etc/yum.repos.d
+2. Copy the following content into it:
+
+[Ansible]
+name = ansible
+
+baseurl = https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/
+
+enabled = 1
+
+gpgcheck = 0 
+
+3. Run 'yum update' 
+
+ rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+ 
+yum -y install ansible
+
+
+
+ 
+ 
+ vi /etc/ansible/hosts 
+
+  [all]
+  172.31.19.125 ansible_ssh_private_key_file=~/.ssh/server1.pem ansible_ssh_user=ec2-user
+  
+  
+  
+-----------------------chkuser.yaml--------------------  
+---
+- hosts: all
+
+  tasks:
+    - name: Check if user exists
+      action: chkuser username=root
+      register: user
+      become: yes
+
+    - debug: msg="{{ user.msg }}"
+    
+-------------chkuser.py----------------------
+
+#!/bin/python
+def is_user_exists(username):
+    try:
+        import pwd
+        return(username in [entry.pw_name for entry in pwd.getpwall()])
+    except:
+        module.fail_json(msg='Module pwd does not exists')
+        
+
+def main():
+    module = AnsibleModule(
+        argument_spec = dict(
+            username = dict(required=True)
+        )
+    )   
+    username = module.params.get('username')
+    exists = is_user_exists(username)
+    if exists:
+        status = '%s user exists' % username 
+    else:
+        status = '%s user does not exist' % username
+    module.exit_json(changed=True, msg=str(status))
+
+from ansible.module_utils.basic import *
+main() 
+
+
+---------------------------Jenkins Installation--------------------
+    1  cd /opt
+    2  sudo apt update -y
+    3  sudo apt-get update -y
+    4  sudo apt-get install openjdk-8-jdk
+    5  wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+    6  echo "deb http://pkg.jenkins-ci.org/debian binary/" | sudo tee -a /etc/apt/sources.list.d/jenkins.list
+    7  sudo apt-get update
+    8  sudo apt-get install jenkins
+    9  service jenkins status
+    
+    
+    
+ ----------------Maven Installation-----------------
+ 
+41 sudo add-apt-repository "deb http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main"
+42 sudo apt-get update
+43 sudo apt-get install maven3
+44 sudo ln -s /usr/share/maven3/bin/mvn /usr/bin/mvn
+
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+    export MAVEN_HOME=/usr/share/maven3
+
+
+---------Ansible Installation----------------
+sudo apt-get install ansible
+
+#steps to remove boto error
+    sudo apt-get install wget
+wget https://bootstrap.pypa.io/get-pip.py
+sudo apt-get install gcc libffi-devel python-devel openssl-devel
+sudo python get-pi..p.py
+    sudo pip install boto
+----------------------------------------------------    
+    https://github.com/nvn17git/nvnshoppingcart
+
+vi /etc/sudoers 
+jenkins ALL=(ALL) NOPASSWD: ALL
+
+sh 'cp **/*.war /var/lib/tomcat/apache-tomcat-8.5.24/webapps/'
+
+ansible-playbook /opt/devops/ansible/e2eproject/deploy.yml -vvvv
+
+========================GIT HUB==========================
+mkdir mydevops
+cd mydevops
+git init
+cp -r /opt/devops/ansible/ .
+ls -lrt    
+cd ansible/
+cd ..
+git status
+git add .
+history
